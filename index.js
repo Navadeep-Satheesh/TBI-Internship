@@ -3,10 +3,12 @@ const app = express();
 const mongoose = require("mongoose");
 const cors = require("cors");
 const deviceRoute = require("./routes/deviceRoutes");
+const userRoute = require("./routes/userRoutes");
 //middleware
 app.use(cors()); // Include CORS if needed
 app.use(express.json());
 app.use("/", deviceRoute);
+app.use("/auth", userRoute);
 mongoose
   .connect(
     "mongodb+srv://tve22cs089:collegeofengineeringtvm@probonodata.zn5kwew.mongodb.net/?retryWrites=true&w=majority&appName=proBonoData"
