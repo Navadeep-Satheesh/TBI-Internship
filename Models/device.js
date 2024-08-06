@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const deviceSchema = mongoose.Schema(
   {
     name: {
+      //Device Name
       type: [String],
       required: true,
     },
@@ -23,6 +24,10 @@ const deviceSchema = mongoose.Schema(
     serialNumber: {
       type: Number,
       unique: true,
+      required: true,
+    },
+    date: {
+      type: Date,
       required: true,
     },
   },
