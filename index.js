@@ -2,12 +2,11 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const cors = require("cors");
-require("dotenv").config();
-const funtionRoute = require("./controllers/deviceControllers'");
-
+const deviceRoute = require("./routes/deviceRoutes");
 //middleware
-app.use("/", funtionRoute);
-
+app.use(cors()); // Include CORS if needed
+app.use(express.json());
+app.use("/", deviceRoute);
 mongoose
   .connect(
     "mongodb+srv://tve22cs089:collegeofengineeringtvm@probonodata.zn5kwew.mongodb.net/?retryWrites=true&w=majority&appName=proBonoData"

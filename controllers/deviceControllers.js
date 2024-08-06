@@ -5,6 +5,7 @@ const deviceRegister = async (req, res) => {
   try {
     const { username, deviceNumber, level } = req.body;
     if (!(username && deviceNumber && level)) {
+      console.log("ok");
       res.status(400).json({ message: "Incomplete data" });
     }
     const existingUser = await Device.findOne({ username, deviceNumber });
@@ -20,4 +21,7 @@ const deviceRegister = async (req, res) => {
   } catch (err) {
     res.status(400).json({ message: err });
   }
+};
+module.exports = {
+  deviceRegister,
 };

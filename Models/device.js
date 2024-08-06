@@ -2,17 +2,27 @@ const mongoose = require("mongoose");
 
 const deviceSchema = mongoose.Schema(
   {
-    username: {
-      type: String,
+    name: {
+      type: [String],
       required: true,
     },
-    deviceNumber: {
-      type: Number,
+    location: {
+      type: String,
+      requried: true,
+      unique: true,
+    },
+    status: {
+      type: String,
       unique: true,
       required: true,
     },
-    level: {
+    capacity: {
       type: Number,
+      required: true,
+    },
+    serialNumber: {
+      type: Number,
+      unique: true,
       required: true,
     },
   },
