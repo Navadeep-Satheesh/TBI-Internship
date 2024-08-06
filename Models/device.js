@@ -4,7 +4,7 @@ const deviceSchema = mongoose.Schema(
   {
     name: {
       //Device Name
-      type: [String],
+      type: String,
       required: true,
     },
     location: {
@@ -24,6 +24,10 @@ const deviceSchema = mongoose.Schema(
     serialNumber: {
       type: Number,
       unique: true,
+      required: true,
+    },
+    username: {
+      type: [String],
       required: true,
     },
     date: {
