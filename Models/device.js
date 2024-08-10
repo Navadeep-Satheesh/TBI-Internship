@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const deviceSchema = mongoose.Schema(
   {
+    username: {
+      type: [String],
+      required: true,
+    },
     name: {
       //Device Name
       type: String,
@@ -9,13 +13,17 @@ const deviceSchema = mongoose.Schema(
     },
     location: {
       type: String,
-      requried: true,
-      unique: true,
+      required: true,
+      // unique: true
+    },
+    level: {
+      type: Number,
+      required: true,
     },
     status: {
       type: String,
-      unique: true,
       required: true,
+      enum: ["Active", "Inactive", "Maintainence"],
     },
     capacity: {
       type: Number,
@@ -26,11 +34,8 @@ const deviceSchema = mongoose.Schema(
       unique: true,
       required: true,
     },
-    username: {
-      type: [String],
-      required: true,
-    },
-    date: {
+
+    serviceDate: {
       type: Date,
       required: true,
     },
