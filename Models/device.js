@@ -19,6 +19,7 @@ const deviceSchema = mongoose.Schema(
     level: {
       type: Number,
       required: true,
+      default: 0,
     },
     status: {
       type: String,
@@ -30,7 +31,7 @@ const deviceSchema = mongoose.Schema(
       required: true,
     },
     serialNumber: {
-      type: Number,
+      type: String,
       unique: true,
       required: true,
     },

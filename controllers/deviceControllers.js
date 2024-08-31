@@ -8,7 +8,12 @@ const checkDeviceExists = async (req, res) => {
   try {
     const device = await Device.findOne({ serialNumber });
     if (device) {
-      res.status(200).json({ message: "Device Exists" });
+      // res.status(200).json({ message: "Device Exists" });
+      if (!device.location) {
+        res.status(400).json({ message: "No location" });
+      } else {
+        res.status(200).json({ message: "Ok" });
+      }
     } else {
       res.status(400).json({ message: "Device doesnot exist" });
     }
@@ -21,24 +26,24 @@ const deviceRegisterNotExisting = async (req, res) => {
   try {
     const {
       name,
-      location,
+      // location,
       status,
       capacity,
       serialNumber,
       username,
-      level,
+      // level,
       serviceDate,
     } = req.body;
 
     if (
       !(
         name &&
-        location &&
+        // location &&
         status &&
         capacity &&
         serialNumber &&
         username &&
-        level &&
+        // level &&
         serviceDate
       )
     ) {
@@ -47,12 +52,12 @@ const deviceRegisterNotExisting = async (req, res) => {
     const formattedDate = new Date(serviceDate);
     const device = await Device.create({
       name,
-      location,
+      // location,
       status,
       capacity,
       serialNumber,
       username,
-      level,
+      // level,
       serviceDate: formattedDate,
     });
     res.status(200).json({ message: "Device registered successfully" });
@@ -62,7 +67,7 @@ const deviceRegisterNotExisting = async (req, res) => {
 };
 
 const deviceRegisterExisting = async (req, res) => {
-  const { username, serialNumber } = req.body;
+  const { username, serialNumber, location } = req.body;
 
   if (!username && !serialNumber) {
     return res
@@ -75,6 +80,12 @@ const deviceRegisterExisting = async (req, res) => {
       { serialNumber },
       { $addToSet: { username: username } }
     );
+    if (location) {
+      const updateLocation = await Device.updateOne(
+        { serialNumber },
+        { $set: { location: location } }
+      );
+    }
 
     if (updateResult.nModified === 0) {
       return res.status(400).json({
@@ -119,7 +130,7 @@ const updateLevel = async (req, res) => {
     if (waterLevel > device.capacity) {
       res.status(400).json({ message: "Water level greater than capacity" });
     }
-    console.log(waterLevel, serialNumber);
+    // console.log(waterLevel, serialNumber);
 
     const updatedDevice = await Device.updateOne(
       { serialNumber },
@@ -146,7 +157,7 @@ const removeDevice = async (req, res) => {
     if (device.deletedCount === 0) {
       res.status(404).json({ message: "Device not found." });
     }
-    console.log(serialNumber);
+    // console.log(serialNumber);
     res.status(200).json({ message: "Device deleted successfully." });
   } catch (err) {
     res.status(400).json({ message: err });
