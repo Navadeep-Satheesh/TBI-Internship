@@ -12,10 +12,10 @@ const checkDeviceExists = async (req, res) => {
       if (!device.location) {
         res.status(400).json({ message: "No location" });
       } else {
-        res.status(200).json({ message: "Ok" });
+        res.status(200).json({ message: "Device found" });
       }
     } else {
-      res.status(400).json({ message: "Device doesnot exist" });
+      res.status(400).json({ message: "Device not found" });
     }
   } catch (error) {
     res.status(400).json({ message: err });
@@ -24,39 +24,19 @@ const checkDeviceExists = async (req, res) => {
 
 const deviceRegisterNotExisting = async (req, res) => {
   try {
-    const {
-      name,
-      // location,
-      status,
-      capacity,
-      serialNumber,
-      username,
-      // level,
-      serviceDate,
-    } = req.body;
+    const { status, capacity, serialNumber, serviceDate } = req.body;
 
-    if (
-      !(
-        name &&
-        // location &&
-        status &&
-        capacity &&
-        serialNumber &&
-        username &&
-        // level &&
-        serviceDate
-      )
-    ) {
+    if (!(status && capacity && serialNumber && serviceDate)) {
       res.status(400).json({ message: "Incomplete data" });
     }
     const formattedDate = new Date(serviceDate);
     const device = await Device.create({
-      name,
+      // name,
       // location,
       status,
       capacity,
       serialNumber,
-      username,
+      // username,
       // level,
       serviceDate: formattedDate,
     });
@@ -67,18 +47,22 @@ const deviceRegisterNotExisting = async (req, res) => {
 };
 
 const deviceRegisterExisting = async (req, res) => {
-  const { username, serialNumber, location } = req.body;
+  const { username, DeviceName, serialNumber, location } = req.body;
 
-  if (!username && !serialNumber) {
+  if (!username && !serialNumber && !DeviceName) {
     return res
       .status(400)
-      .json({ message: "Username and serial number are required." });
+      .json({ message: "Username and serial number  and name are required." });
   }
 
   try {
+    const device = await Device.findOne({ serialNumber });
+    if (!device) {
+      res.status(400).json({ message: "Device does not exist" });
+    }
     const updateResult = await Device.updateOne(
       { serialNumber },
-      { $addToSet: { username: username } }
+      { $addToSet: { username: username }, $set: { DeviceName: DeviceName } }
     );
     if (location) {
       const updateLocation = await Device.updateOne(
@@ -92,7 +76,7 @@ const deviceRegisterExisting = async (req, res) => {
         message: "No changes made. Username might already be present.",
       });
     }
-    res.status(200).json({ message: "Username added to device successfully." });
+    res.status(200).json({ message: "User added to device successfully." });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error", error: err.message });
@@ -125,7 +109,7 @@ const updateLevel = async (req, res) => {
   try {
     const device = await Device.findOne({ serialNumber });
     if (!device) {
-      res.status(400).json({ message: "Device doesnot exist" });
+      res.status(400).json({ message: "Device does not exist" });
     }
     if (waterLevel > device.capacity) {
       res.status(400).json({ message: "Water level greater than capacity" });

@@ -4,21 +4,22 @@ const deviceSchema = mongoose.Schema(
   {
     username: {
       type: [String],
-      required: true,
+      unique: false,
     },
-    name: {
+    DeviceName: {
       //Device Name
       type: String,
-      required: true,
+      // required: true,
+      default: "Unnamed",
     },
     location: {
       type: String,
-      required: true,
+      // required: true,
       // unique: true
     },
     level: {
       type: Number,
-      required: true,
+      // required: true,
       default: 0,
     },
     status: {
