@@ -9,6 +9,10 @@ app.use(cors()); // Include CORS if needed
 app.use(express.json());
 app.use("/", deviceRoute);
 app.use("/auth", userRoute);
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next(); // Move to the next middleware or route handler
+});
 mongoose
   .connect(
     "mongodb+srv://tve22cs089:collegeofengineeringtvm@probonodata.zn5kwew.mongodb.net/?retryWrites=true&w=majority&appName=proBonoData"
