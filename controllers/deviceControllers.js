@@ -98,7 +98,7 @@ const getAllDevices = async (req, res) => {
 
 const updateLevel = async (req, res) => {
   const { waterLevel, serialNumber } = req.body;
-  if (!(waterLevel && serialNumber)) {
+  if (serialNumber == null || waterLevel == null) {
     res.status(400).json({ message: "Incomplete Data" });
   }
   try {
@@ -106,14 +106,10 @@ const updateLevel = async (req, res) => {
     if (!device) {
       res.status(400).json({ message: "Device does not exist" });
     }
-    if (waterLevel > device.capacity) {
-      res.status(400).json({ message: "Water level greater than capacity" });
-    }
-    // console.log(waterLevel, serialNumber);
-
+    const newLevel = device.level + waterLevel;
     const updatedDevice = await Device.updateOne(
       { serialNumber },
-      { level: waterLevel }
+      { level: newLevel }
     );
     if (updatedDevice.nModified === 0) {
       res.status(400).json({ message: "Error updating the level" });

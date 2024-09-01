@@ -13,12 +13,14 @@ app.use((req, res, next) => {
   console.log(`${req.method} ${req.url}`);
   next();
 });
+
+const PORT = process.env.PORT || 3000;
 mongoose
   .connect(
     "mongodb+srv://tve22cs089:collegeofengineeringtvm@probonodata.zn5kwew.mongodb.net/?retryWrites=true&w=majority&appName=proBonoData"
   )
   .then(() => {
-    app.listen(3000, () => {
+    app.listen(PORT, () => {
       console.log("Server is running");
     });
     console.log("Connection of Mongoatlas established");
