@@ -31,13 +31,9 @@ const deviceRegisterNotExisting = async (req, res) => {
     }
     const formattedDate = new Date(serviceDate);
     const device = await Device.create({
-      // name,
-      // location,
       status,
-      capacity,
       serialNumber,
-      // username,
-      // level,
+      capacity,
       serviceDate: formattedDate,
     });
     res.status(200).json({ message: "Device registered successfully" });
@@ -70,7 +66,6 @@ const deviceRegisterExisting = async (req, res) => {
         { $set: { location: location } }
       );
     }
-
     if (updateResult.nModified === 0) {
       return res.status(400).json({
         message: "No changes made. Username might already be present.",
@@ -148,6 +143,31 @@ const removeDevice = async (req, res) => {
   }
 };
 
+const addServiceDate = async (req, res) => {
+  const { serviceDate, serialNumber } = req.body;
+  try {
+    const deviceExist = await Device.findOne({ serialNumber });
+    if (!deviceExist) {
+      res.status(400).json({ message: "Device does not exist" });
+    }
+    const updateDate = await Device.updateOne(
+      { serialNumber },
+      {
+        $addToSet: { serviceDate: serviceDate },
+        $set: { level: 0 },
+      }
+    );
+    if (updateDate.nModified === 0) {
+      return res.status(400).json({
+        message: "Date not added",
+      });
+    }
+    res.status(200).json({ message: "Service date added" });
+  } catch (err) {
+    res.status(400).json({ message: err });
+  }
+};
+
 module.exports = {
   deviceRegisterNotExisting,
   getAllDevices,
@@ -155,4 +175,5 @@ module.exports = {
   deviceRegisterExisting,
   updateLevel,
   removeDevice,
+  addServiceDate,
 };

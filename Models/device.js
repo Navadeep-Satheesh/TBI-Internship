@@ -38,7 +38,7 @@ const deviceSchema = mongoose.Schema(
     },
 
     serviceDate: {
-      type: Date,
+      type: [Date],
       required: true,
     },
   },
